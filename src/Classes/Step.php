@@ -13,6 +13,7 @@ class Step
     private $result;
     private $resultCode;
     private $exception;
+    private $exceptionDetails;
     private $output;
     private $definition;
     private $argumentType;
@@ -127,6 +128,22 @@ class Step
     public function setException($exception)
     {
         $this->exception = $exception;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExceptionDetails()
+    {
+        return $this->exceptionDetails;
+    }
+
+    /**
+     * @param mixed $exceptionDetails
+     */
+    public function setExceptionDetails($exceptionDetails)
+    {
+        $this->exceptionDetails = $exceptionDetails;
     }
 
     /**

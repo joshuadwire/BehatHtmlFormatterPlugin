@@ -432,8 +432,11 @@ class Behat2Renderer implements RendererInterface
                         </div>';
         $exception = $step->getException();
         if (!empty($exception)) {
-            $print .= '
-                        <pre class="backtrace">'.$step->getException().'</pre>';
+            $print .= '<pre class="backtrace">'.$step->getException();
+            if($step->getExceptionDetails()) {
+                $print .= "\n" .$step->getExceptionDetails();
+            }
+            $print.='</pre>';
             if ($scenario->getRelativeScreenshotPath()) {
                 $print .= '<a href="'.$scenario->getRelativeScreenshotPath().'">Screenshot</a>';
             }

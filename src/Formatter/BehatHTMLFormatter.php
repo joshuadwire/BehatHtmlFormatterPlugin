@@ -26,6 +26,8 @@ use emuse\BehatHTMLFormatter\Classes\Step;
 use emuse\BehatHTMLFormatter\Classes\Suite;
 use emuse\BehatHTMLFormatter\Printer\FileOutputPrinter;
 use emuse\BehatHTMLFormatter\Renderer\BaseRenderer;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\PHPTAssertionFailedError;
 
 /**
  * Class BehatHTMLFormatter.
@@ -621,6 +623,13 @@ class BehatHTMLFormatter implements Formatter
                             $this->pendingSteps[] = $step;
                         } else {
                             $step->setException($exception->getMessage());
+
+                            if ($exception instanceof ExpectationFailedException && $exception->getComparisonFailure()) {
+                                $step->setExceptionDetails(trim($exception->getComparisonFailure()->getDiff()));
+                            } elseif ($exception instanceof PHPTAssertionFailedError) {
+                                $step->setExceptionDetails(trim($exception->getDiff()));
+                            }
+
                             $this->failedSteps[] = $step;
                         }
                     } else {

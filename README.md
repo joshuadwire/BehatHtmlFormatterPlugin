@@ -1,8 +1,11 @@
 ## BehatHtmlFormatterPlugin
 
-Behat 3 extension for generating HTML reports from your test results.
+Forked from [dutchiexl/BehatHtmlFormatterPlugin](https://github.com/dutchiexl/BehatHtmlFormatterPlugin)
 
-[![Latest Stable Version](https://poser.pugx.org/emuse/behat-html-formatter/v/stable)](https://packagist.org/packages/emuse/behat-html-formatter) [![Total Downloads](https://poser.pugx.org/emuse/behat-html-formatter/downloads)](https://packagist.org/packages/emuse/behat-html-formatter) [![Latest Unstable Version](https://poser.pugx.org/emuse/behat-html-formatter/v/unstable)](https://packagist.org/packages/emuse/behat-html-formatter) [![License](https://poser.pugx.org/emuse/behat-html-formatter/license)](https://packagist.org/packages/emuse/behat-html-formatter)
+Modified to include diffs for failed comparisons.
+ 
+
+Behat 3 extension for generating HTML reports from your test results.
 
 ### Twig report
 
