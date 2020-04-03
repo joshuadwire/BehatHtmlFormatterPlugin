@@ -74,6 +74,12 @@ class Behat2Renderer implements RendererInterface
             $sceTotal += count($obj->getPendingScenarios());
         }
 
+        $strSceUndefined = '';
+        if (null !== $obj->getUndefinedScenarios() && count($obj->getUndefinedScenarios()) > 0) {
+            $strSceUndefined = ' <strong class="failed">'.count($obj->getUndefinedScenarios()).' fail</strong>';
+            $sceTotal += count($obj->getUndefinedScenarios());
+        }
+
         $strSceFailed = '';
         if (null !== $obj->getFailedScenarios() && count($obj->getFailedScenarios()) > 0) {
             $strSceFailed = ' <strong class="failed">'.count($obj->getFailedScenarios()).' fail</strong>';
@@ -91,6 +97,12 @@ class Behat2Renderer implements RendererInterface
         if (null !== $obj->getPendingSteps() && count($obj->getPendingSteps()) > 0) {
             $strStepsPending = ' <strong class="pending">'.count($obj->getPendingSteps()).' pending</strong>';
             $stepsTotal += count($obj->getPendingSteps());
+        }
+
+        $strStepsUndefined = '';
+        if (null !== $obj->getUndefinedSteps() && count($obj->getUndefinedSteps()) > 0) {
+            $strStepsUndefined = ' <strong class="pending">'.count($obj->getUndefinedSteps()).' undefined</strong>';
+            $stepsTotal += count($obj->getUndefinedSteps());
         }
 
         $strStepsSkipped = '';
@@ -126,10 +138,10 @@ class Behat2Renderer implements RendererInterface
                     '.$featTotal.' features ('.$strFeatPassed.$strFeatFailed.' )
                 </p>
                 <p class="scenarios">
-                    '.$sceTotal.' scenarios ('.$strScePassed.$strScePending.$strSceFailed.' )
+                    '.$sceTotal.' scenarios ('.$strScePassed.$strScePending.$strSceUndefined.$strSceFailed.' )
                 </p>
                 <p class="steps">
-                    '.$stepsTotal.' steps ('.$strStepsPassed.$strStepsPending.$strStepsSkipped.$strStepsFailed.' )
+                    '.$stepsTotal.' steps ('.$strStepsPassed.$strStepsPending.$strStepsUndefined.$strStepsSkipped.$strStepsFailed.' )
                 </p>
                 <p class="time">
                 '.$obj->getTimer().' - '.$obj->getMemory().'

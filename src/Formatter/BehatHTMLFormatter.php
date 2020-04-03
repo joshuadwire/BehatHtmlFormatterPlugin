@@ -138,6 +138,11 @@ class BehatHTMLFormatter implements Formatter
     /**
      * @var Scenario[]
      */
+    private $undefinedScenarios = array();
+
+    /**
+     * @var Scenario[]
+     */
     private $passedScenarios = array();
 
     /**
@@ -164,6 +169,11 @@ class BehatHTMLFormatter implements Formatter
      * @var Step[]
      */
     private $pendingSteps = array();
+
+    /**
+     * @var Step[]
+     */
+    private $undefinedSteps = array();
 
     /**
      * @var Step[]
@@ -359,6 +369,11 @@ class BehatHTMLFormatter implements Formatter
         return $this->pendingScenarios;
     }
 
+    public function getUndefinedScenarios()
+    {
+        return $this->undefinedScenarios;
+    }
+
     public function getPassedScenarios()
     {
         return $this->passedScenarios;
@@ -387,6 +402,11 @@ class BehatHTMLFormatter implements Formatter
     public function getPendingSteps()
     {
         return $this->pendingSteps;
+    }
+
+    public function getUndefinedSteps()
+    {
+        return $this->undefinedSteps;
     }
 
     public function getSkippedSteps()
@@ -515,6 +535,10 @@ class BehatHTMLFormatter implements Formatter
             $this->pendingScenarios[] = $this->currentScenario;
             $this->currentFeature->addPendingScenario();
             $this->currentScenario->setPending(true);
+        } elseif (StepResult::UNDEFINED == $event->getTestResult()->getResultCode()) {
+            $this->undefinedScenarios[] = $this->currentScenario;
+            $this->currentFeature->addUndefinedScenario();
+            $this->currentScenario->setUndefined(true);
         } else {
             $this->failedScenarios[] = $this->currentScenario;
             $this->currentFeature->addFailedScenario();
@@ -606,7 +630,7 @@ class BehatHTMLFormatter implements Formatter
         //What is the result of this step ?
         if (is_a($result, 'Behat\Behat\Tester\Result\UndefinedStepResult')) {
             //pending step -> no definition to load
-            $this->pendingSteps[] = $step;
+            $this->undefinedSteps[] = $step;
         } else {
             if (is_a($result, 'Behat\Behat\Tester\Result\SkippedStepResult')) {
                 //skipped step

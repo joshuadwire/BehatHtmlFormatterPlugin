@@ -13,6 +13,7 @@ class Feature
     private $screenshotFolder;
     private $failedScenarios = 0;
     private $pendingScenarios = 0;
+    private $undefinedScenarios = 0;
     private $passedScenarios = 0;
     private $scenarioCounter = 1;
 
@@ -175,6 +176,27 @@ class Feature
     /**
      * @return mixed
      */
+    public function getUndefinedScenarios()
+    {
+        return $this->undefinedScenarios;
+    }
+
+    /**
+     * @param mixed $undefinedScenarios
+     */
+    public function setUndefinedScenarios($undefinedScenarios)
+    {
+        $this->undefinedScenarios = $undefinedScenarios;
+    }
+
+    public function addUndefinedScenario($number = 1)
+    {
+        $this->undefinedScenarios += $number;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPassedScenarios()
     {
         return $this->passedScenarios;
@@ -224,6 +246,9 @@ class Feature
     public function getPassedClass()
     {
         if ($this->allPassed()) {
+            if ($this->undefinedScenarios || $this->pendingScenarios) {
+                return 'pending';
+            }
             return 'passed';
         }
 

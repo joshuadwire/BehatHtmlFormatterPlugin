@@ -65,11 +65,13 @@
                 <canvas id="chart-scenarios" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                {{ (failedScenarios|length) + (passedScenarios|length) + (skippedScenarios|length) + (undefinedScenarios|length) }}
+                {{ (failedScenarios|length) + (passedScenarios|length) + (skippedScenarios|length) + (undefinedScenarios|length) + (pendingScenarios|length) }}
                 Scenarios:
             </div>
             <div class="chart-summary failed">{{ failedScenarios|length }} failed</div>
+            <div class="chart-summary failed">{{ passedScenarios|length }} passed</div>
             <div class="chart-summary undefined">{{ undefinedScenarios|length }} undefined</div>
+            <div class="chart-summary pending">{{ pendingScenarios|length }} pending</div>
             <div class="chart-summary skipped">{{ skippedScenarios|length }} skipped</div>
         </div>
         <div class="col-sm-4">
@@ -77,11 +79,13 @@
                 <canvas id="chart-steps" width="300" height="300"/>
             </div>
             <div class="chart-summary title">
-                {{ (failedSteps|length) + (passedSteps|length) + (skippedSteps|length) + (undefinedSteps|length) }}
+                {{ (failedSteps|length) + (passedSteps|length) + (skippedSteps|length) + (undefinedSteps|length) + (pendingSteps|length) }}
                 Steps:
             </div>
             <div class="chart-summary failed">{{ failedSteps|length }} failed</div>
+            <div class="chart-summary failed">{{ passedSteps|length }} passed</div>
             <div class="chart-summary undefined">{{ undefinedSteps|length }} undefined</div>
+            <div class="chart-summary pending">{{ pendingSteps|length }} pending</div>
             <div class="chart-summary skipped">{{ skippedSteps|length }} skipped</div>
         </div>
     </div>
@@ -89,6 +93,7 @@
     <div class="filters">
         <a class="btn btn-default" id="feature-all-filter" role="button">All</a>
         <a class="btn btn-success" id="feature-passed-filter" role="button">Passed</a>
+        <a class="btn btn-warning" id="feature-pending-filter" role="button">Pending/Undefined</a>
         <a class="btn btn-danger" id="feature-failed-filter" role="button">Failed</a>
     </div>
     <hr>
@@ -179,7 +184,7 @@
                     </div>
                     <div class="col-sm-8 details panel-group" role="tablist" aria-multiselectable="true">
                         {% for scenario in feature.scenarios %}
-                            <div class="panel panel-default {% if scenario.isPassed %}passed{% elseif scenario.isPending %}pending{% else %}failed{% endif %}">
+                            <div class="panel panel-default {% if scenario.isPassed %}passed{% elseif scenario.isPending or scenario.isUndefined %}pending{% else %}failed{% endif %}">
                                 <div class="panel-heading" role="tab">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion"
@@ -204,7 +209,7 @@
                                      aria-labelledby="headingOne">
                                     <ul class="list-group">
                                         {% for step in scenario.steps %}
-                                            <li class="list-group-item alert alert-{% if step.isPassed %}success{% elseif step.isSkipped %}info{% elseif step.isPending %}warning{% else %}danger{% endif %}">
+                                            <li class="list-group-item alert alert-{% if step.isPassed %}success{% elseif step.isSkipped %}info{% elseif step.isPending or step.isUndefined %}warning{% else %}danger{% endif %}">
                                                 <b>{{ step.keyword }}</b> {{ step.text }}
                                                 {% if printStepArgs is not null %}
                                                     {% for argument in step.arguments %}
@@ -228,9 +233,6 @@
                                                     </li><li class="list-group-item break">
                                                 {% endif %}
                                             </li>
-                                            {#<div class="bs-callout bs-callout-{% if step.passed %}success{% else %}danger{% endif %}" id="callout-collapse-accessibility">#}
-                                            {#<b>{{ step.keyword }}</b> {{ step.text }}#}
-                                            {#</div>#}
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -254,25 +256,25 @@
         var scenarioChart = document.getElementById("chart-scenarios").getContext("2d");
         var stepChart = document.getElementById("chart-steps").getContext("2d");
         new Chart(featureChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
-                labels: ['Failed', 'Pending', 'Passed'],
-                datasets: [{
-                    data: [{{ failedScenarios|length }}, {{ pendingScenarios|length }}, {{ passedScenarios|length }}],
-                    backgroundColor: ['#F7464A', 'e38d13', '#00a65a'],
-                }],
-            }});
-        new Chart(scenarioChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
                 labels: ['Failed', 'Passed'],
                 datasets: [{
                     data: [{{ failedFeatures|length }}, {{ passedFeatures|length }}],
                     backgroundColor: ["#F7464A", "#00a65a"],
-                }],
+                }]
+            }});
+        new Chart(scenarioChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
+                labels: ['Failed','Pending/Undefined','Skipped','Passed'],
+                datasets: [{
+                    data: [{{ failedScenarios|length }}, {{ pendingScenarios|length+undefinedScenarios|length }}, {{ skippedScenarios|length }}, {{ passedScenarios|length }}],
+                    backgroundColor: ['#F7464A', '#e38d13', '#5bc0de', '#00a65a'],
+                }]
             }});
         new Chart(stepChart, {type: 'doughnut', options: {legend: {display: false}}, data: {
-                labels: ['Failed','Passed'],
+                labels: ['Failed','Pending/Undefined','Skipped','Passed'],
                 datasets: [{
-                    data: [{{ failedSteps|length }}, {{ passedSteps|length }}],
-                    backgroundColor: ["#F7464A", "#00a65a"],
-                }],
+                    data: [{{ failedSteps|length }}, {{ pendingSteps|length+undefinedSteps|length }}, {{ skippedSteps|length }}, {{ passedSteps|length }}],
+                    backgroundColor: ["#F7464A", '#e38d13', '#5bc0de', "#00a65a"],
+                }]
             }});
     };
 </script>

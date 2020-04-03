@@ -25,6 +25,11 @@ class Scenario
     private $pending;
 
     /**
+     * @var bool
+     */
+    private $undefined;
+
+    /**
      * @var Step[]
      */
     private $steps;
@@ -134,6 +139,22 @@ class Scenario
     public function setPending($pending)
     {
         $this->pending = $pending;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUndefined()
+    {
+        return $this->undefined;
+    }
+
+    /**
+     * @param bool $undefined
+     */
+    public function setUndefined($undefined)
+    {
+        $this->undefined = $undefined;
     }
 
     /**

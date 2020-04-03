@@ -75,6 +75,9 @@ body {
 .card.passed .header {
   background-color: #00a65a;
 }
+.card.pending .header {
+  background-color: #e38d13;
+}
 .card.failed .header {
   background-color: #f56956;
 }
