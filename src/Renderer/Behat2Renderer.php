@@ -70,13 +70,13 @@ class Behat2Renderer implements RendererInterface
 
         $strScePending = '';
         if (null !== $obj->getPendingScenarios() && count($obj->getPendingScenarios()) > 0) {
-            $strScePending = ' <strong class="failed">'.count($obj->getPendingScenarios()).' fail</strong>';
+            $strScePending = ' <strong class="pending">'.count($obj->getPendingScenarios()).' pending</strong>';
             $sceTotal += count($obj->getPendingScenarios());
         }
 
         $strSceUndefined = '';
         if (null !== $obj->getUndefinedScenarios() && count($obj->getUndefinedScenarios()) > 0) {
-            $strSceUndefined = ' <strong class="failed">'.count($obj->getUndefinedScenarios()).' fail</strong>';
+            $strSceUndefined = ' <strong class="pending">'.count($obj->getUndefinedScenarios()).' undefined</strong>';
             $sceTotal += count($obj->getUndefinedScenarios());
         }
 
