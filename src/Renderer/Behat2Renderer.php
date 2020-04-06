@@ -452,6 +452,9 @@ class Behat2Renderer implements RendererInterface
             if ($scenario->getRelativeScreenshotPath()) {
                 $print .= '<a href="'.$scenario->getRelativeScreenshotPath().'">Screenshot</a>';
             }
+            if ($scenario->getRelativeLogsPath()) {
+                $print .= '<a href="'.$scenario->getRelativeLogsPath().'">Logs</a>';
+            }
         }
         $print .= '
                     </li>';

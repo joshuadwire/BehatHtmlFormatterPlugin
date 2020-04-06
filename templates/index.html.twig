@@ -201,6 +201,9 @@
                                             {% if scenario.getRelativeScreenshotPath() %}
                                             <a class="label label-default" href="{{ scenario.getRelativeScreenshotPath() }}" target="_blank">Screenshot</a>
                                             {% endif %}
+                                            {% if scenario.getRelativeLogsPath() %}
+                                                <a class="label label-default" href="{{ scenario.getRelativeLogsPath() }}" target="_blank">Logs</a>
+                                            {% endif %}
                                         </div>
                                     </h4>
                                 </div>

@@ -34,6 +34,7 @@ class Scenario
      */
     private $steps;
     private $screenshotPath;
+    private $logsPath;
 
     /**
      * @return mixed
@@ -216,6 +217,19 @@ class Scenario
         return $this->screenshotPath;
     }
 
+    public function setLogsPath($string)
+    {
+        $this->logsPath = $string;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogsPath()
+    {
+        return $this->logsPath;
+    }
+
     /**
      * Gets relative path for screenshot.
      *
@@ -228,5 +242,19 @@ class Scenario
         }
 
         return '.'.substr($this->screenshotPath, strpos($this->screenshotPath, '/assets/screenshots'));
+    }
+
+    /**
+     * Gets relative path for screenshot.
+     *
+     * @return bool|string
+     */
+    public function getRelativeLogsPath()
+    {
+        if (!file_exists($this->logsPath)) {
+            return false;
+        }
+
+        return '.'.substr($this->logsPath, strpos($this->logsPath, '/assets/logs'));
     }
 }
