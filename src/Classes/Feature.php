@@ -14,6 +14,7 @@ class Feature
     private $failedScenarios = 0;
     private $pendingScenarios = 0;
     private $undefinedScenarios = 0;
+    private $skippedScenarios = 0;
     private $passedScenarios = 0;
     private $scenarioCounter = 1;
 
@@ -197,6 +198,27 @@ class Feature
     /**
      * @return mixed
      */
+    public function getSkippedScenarios()
+    {
+        return $this->skippedScenarios;
+    }
+
+    /**
+     * @param mixed $skippedScenarios
+     */
+    public function setSkippedScenarios($skippedScenarios)
+    {
+        $this->skippedScenarios = $skippedScenarios;
+    }
+
+    public function addSkippedScenario($number = 1)
+    {
+        $this->skippedScenarios += $number;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPassedScenarios()
     {
         return $this->passedScenarios;
@@ -236,7 +258,7 @@ class Feature
     //<editor-fold desc="Function">
     public function allPassed()
     {
-        if (0 == $this->failedScenarios) {
+        if (0 == $this->failedScenarios && 0==$this->pendingScenarios && 0==$this->undefinedScenarios && 0==$this->skippedScenarios) {
             return true;
         }
 
@@ -246,13 +268,13 @@ class Feature
     public function getPassedClass()
     {
         if ($this->allPassed()) {
-            if ($this->undefinedScenarios || $this->pendingScenarios) {
-                return 'pending';
-            }
             return 'passed';
         }
 
-        return 'failed';
+        if ($this->failedScenarios) {
+            return 'failed';
+        }
+        return 'pending';
     }
 
     public function getPercentPassed()

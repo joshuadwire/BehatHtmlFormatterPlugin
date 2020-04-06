@@ -143,12 +143,22 @@ class BehatHTMLFormatter implements Formatter
     /**
      * @var Scenario[]
      */
+    private $skippedScenarios = array();
+
+    /**
+     * @var Scenario[]
+     */
     private $passedScenarios = array();
 
     /**
      * @var Feature[]
      */
     private $failedFeatures = array();
+
+    /**
+     * @var Feature[]
+     */
+    private $pendingFeatures = array();
 
     /**
      * @var Feature[]
@@ -374,6 +384,11 @@ class BehatHTMLFormatter implements Formatter
         return $this->undefinedScenarios;
     }
 
+    public function getSkippedScenarios()
+    {
+        return $this->skippedScenarios;
+    }
+
     public function getPassedScenarios()
     {
         return $this->passedScenarios;
@@ -387,6 +402,11 @@ class BehatHTMLFormatter implements Formatter
     public function getPassedFeatures()
     {
         return $this->passedFeatures;
+    }
+
+    public function getPendingFeatures()
+    {
+        return $this->pendingFeatures;
     }
 
     public function getFailedSteps()
@@ -490,8 +510,10 @@ class BehatHTMLFormatter implements Formatter
         $this->currentSuite->addFeature($this->currentFeature);
         if ($this->currentFeature->allPassed()) {
             $this->passedFeatures[] = $this->currentFeature;
-        } else {
+        } elseif($this->currentFeature->getFailedScenarios()) {
             $this->failedFeatures[] = $this->currentFeature;
+        } else {
+            $this->pendingFeatures[] = $this->currentFeature;
         }
 
         $print = $this->renderer->renderAfterFeature($this);
@@ -545,6 +567,10 @@ class BehatHTMLFormatter implements Formatter
             $this->undefinedScenarios[] = $this->currentScenario;
             $this->currentFeature->addUndefinedScenario();
             $this->currentScenario->setUndefined(true);
+        }elseif (StepResult::SKIPPED == $event->getTestResult()->getResultCode()) {
+            $this->skippedScenarios[] = $this->currentScenario;
+            $this->currentFeature->addSkippedScenario();
+            $this->currentScenario->setSkipped(true);
         } else {
             $this->failedScenarios[] = $this->currentScenario;
             $this->currentFeature->addFailedScenario();
@@ -589,6 +615,14 @@ class BehatHTMLFormatter implements Formatter
             $this->pendingScenarios[] = $this->currentScenario;
             $this->currentFeature->addPendingScenario();
             $this->currentScenario->setPending(true);
+        } elseif (StepResult::UNDEFINED == $event->getTestResult()->getResultCode()) {
+            $this->undefinedScenarios[] = $this->currentScenario;
+            $this->currentFeature->addUndefinedScenario();
+            $this->currentScenario->setUndefined(true);
+        }elseif (StepResult::SKIPPED == $event->getTestResult()->getResultCode()) {
+            $this->skippedScenarios[] = $this->currentScenario;
+            $this->currentFeature->addSkippedScenario();
+            $this->currentScenario->setSkipped(true);
         } else {
             $this->failedScenarios[] = $this->currentScenario;
             $this->currentFeature->addFailedScenario();

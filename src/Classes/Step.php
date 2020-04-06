@@ -215,7 +215,15 @@ class Step
      */
     public function isPending()
     {
-        return StepResult::PENDING == $this->resultCode || StepResult::UNDEFINED == $this->resultCode;
+        return StepResult::PENDING == $this->resultCode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUndefined()
+    {
+        return StepResult::UNDEFINED == $this->resultCode;
     }
 
     /**

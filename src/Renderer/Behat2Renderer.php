@@ -53,8 +53,15 @@ class Behat2Renderer implements RendererInterface
             $featTotal += count($obj->getPassedFeatures());
         }
 
-        $strFeatFailed = '';
         $sumRes = 'passed';
+        $strFeatPending= '';
+        if (null !== $obj->getPendingFeatures() && count($obj->getPendingFeatures()) > 0) {
+            $strFeatPending = ' <strong class="pending">'.count($obj->getPendingFeatures()).' pending</strong>';
+            $sumRes = 'pending';
+            $featTotal += count($obj->getPendingFeatures());
+        }
+
+        $strFeatFailed = '';
         if (null !== $obj->getFailedFeatures() && count($obj->getFailedFeatures()) > 0) {
             $strFeatFailed = ' <strong class="failed">'.count($obj->getFailedFeatures()).' fail</strong>';
             $sumRes = 'failed';
@@ -76,8 +83,14 @@ class Behat2Renderer implements RendererInterface
 
         $strSceUndefined = '';
         if (null !== $obj->getUndefinedScenarios() && count($obj->getUndefinedScenarios()) > 0) {
-            $strSceUndefined = ' <strong class="pending">'.count($obj->getUndefinedScenarios()).' undefined</strong>';
+            $strSceUndefined = ' <strong class="undefined">'.count($obj->getUndefinedScenarios()).' undefined</strong>';
             $sceTotal += count($obj->getUndefinedScenarios());
+        }
+
+        $strSceSkipped = '';
+        if (null !== $obj->getSkippedScenarios() && count($obj->getSkippedScenarios()) > 0) {
+            $strSceSkipped = ' <strong class="skipped">'.count($obj->getSkippedScenarios()).' skipped</strong>';
+            $sceTotal += count($obj->getSkippedScenarios());
         }
 
         $strSceFailed = '';
@@ -135,10 +148,10 @@ class Behat2Renderer implements RendererInterface
         <div class="summary '.$sumRes.'">
             <div class="counters">
                 <p class="features">
-                    '.$featTotal.' features ('.$strFeatPassed.$strFeatFailed.' )
+                    '.$featTotal.' features ('.$strFeatPassed.$strFeatPending.$strFeatFailed.' )
                 </p>
                 <p class="scenarios">
-                    '.$sceTotal.' scenarios ('.$strScePassed.$strScePending.$strSceUndefined.$strSceFailed.' )
+                    '.$sceTotal.' scenarios ('.$strScePassed.$strScePending.$strSceUndefined.$strSceSkipped.$strSceFailed.' )
                 </p>
                 <p class="steps">
                     '.$stepsTotal.' steps ('.$strStepsPassed.$strStepsPending.$strStepsUndefined.$strStepsSkipped.$strStepsFailed.' )
@@ -419,7 +432,7 @@ class Behat2Renderer implements RendererInterface
         if ($step->isSkipped()) {
             $stepResultClass = 'skipped';
         }
-        if ($step->isPending()) {
+        if ($step->isPending() || $step->isUndefined()) {
             $stepResultClass = 'pending';
         }
 
@@ -842,6 +855,30 @@ class Behat2Renderer implements RendererInterface
                     .addClass('switcher')
                     .click(function(){
                         var scenario = $('.feature .scenario:has(.failed)');
+                        var feature = scenario.parent();
+
+                        $('#behat_hide_all').click();
+
+                        scenario.addClass('jq-toggle-opened');
+                        feature.addClass('jq-toggle-opened');
+                    });
+
+                $('#behat .summary .counters .scenarios .undefined')
+                    .addClass('switcher')
+                    .click(function(){
+                        var scenario = $('.feature .scenario:has(.undefined)');
+                        var feature = scenario.parent();
+
+                        $('#behat_hide_all').click();
+
+                        scenario.addClass('jq-toggle-opened');
+                        feature.addClass('jq-toggle-opened');
+                    });
+
+                $('#behat .summary .counters .scenarios .skipped')
+                    .addClass('switcher')
+                    .click(function(){
+                        var scenario = $('.feature .scenario:has(.skipped)');
                         var feature = scenario.parent();
 
                         $('#behat_hide_all').click();

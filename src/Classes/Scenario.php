@@ -27,6 +27,11 @@ class Scenario
     /**
      * @var bool
      */
+    private $skipped;
+
+    /**
+     * @var bool
+     */
     private $undefined;
 
     /**
@@ -140,6 +145,22 @@ class Scenario
     public function setPending($pending)
     {
         $this->pending = $pending;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkipped()
+    {
+        return $this->skipped;
+    }
+
+    /**
+     * @param bool $skipped
+     */
+    public function setSkipped($skipped)
+    {
+        $this->skipped = $skipped;
     }
 
     /**
