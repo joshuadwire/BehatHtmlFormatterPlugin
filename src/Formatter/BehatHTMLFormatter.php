@@ -559,7 +559,8 @@ class BehatHTMLFormatter implements Formatter
             $this->passedScenarios[] = $this->currentScenario;
             $this->currentFeature->addPassedScenario();
             $this->currentScenario->setPassed(true);
-        } elseif (StepResult::PENDING == $event->getTestResult()->getResultCode()) {
+        } elseif (StepResult::PENDING == $event->getTestResult()->getResultCode() || $event->getTestResult()->getResultCode() === -100) {
+            // Pending or no steps
             $this->pendingScenarios[] = $this->currentScenario;
             $this->currentFeature->addPendingScenario();
             $this->currentScenario->setPending(true);
@@ -611,7 +612,8 @@ class BehatHTMLFormatter implements Formatter
             $this->passedScenarios[] = $this->currentScenario;
             $this->currentFeature->addPassedScenario();
             $this->currentScenario->setPassed(true);
-        } elseif (StepResult::PENDING == $event->getTestResult()->getResultCode()) {
+        } elseif (StepResult::PENDING == $event->getTestResult()->getResultCode() || $event->getTestResult()->getResultCode() === -100) {
+            // Pending or no steps
             $this->pendingScenarios[] = $this->currentScenario;
             $this->currentFeature->addPendingScenario();
             $this->currentScenario->setPending(true);
