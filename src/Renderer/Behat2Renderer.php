@@ -838,7 +838,19 @@ class Behat2Renderer implements RendererInterface
                 $('#behat .summary .counters .scenarios .failed')
                     .addClass('switcher')
                     .click(function(){
-                        var scenario = $('.feature .scenario:has(.failed, .pending)');
+                        var scenario = $('.feature .scenario:has(.failed)');
+                        var feature = scenario.parent();
+
+                        $('#behat_hide_all').click();
+
+                        scenario.addClass('jq-toggle-opened');
+                        feature.addClass('jq-toggle-opened');
+                    });
+
+                $('#behat .summary .counters .scenarios .pending')
+                    .addClass('switcher')
+                    .click(function(){
+                        var scenario = $('.feature .scenario:has(.pending)');
                         var feature = scenario.parent();
 
                         $('#behat_hide_all').click();
